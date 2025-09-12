@@ -247,11 +247,11 @@ Integrate AI services for cover letter generation and application personalizatio
 #### Tasks
 
 1. **AI Service Architecture**
-   - OpenAI/Anthropic API integration
+   - Gemini 2.5 Flash API integration (exclusive model)
    - Prompt engineering framework
    - Template management system
    - Token usage optimization
-   - Fallback provider setup
+   - No fallback providers (single model for cost control)
 
 2. **Cover Letter Generation**
    - Cover letter prompt templates
@@ -597,7 +597,7 @@ Final testing, security hardening, and production deployment.
 - GitHub (repository, actions)
 - Cloudflare (CDN, Workers)
 - Azure (hosting, storage)
-- OpenAI/Anthropic (AI services)
+- Google Gemini 2.5 Flash (AI services - exclusive)
 - SendGrid (email)
 - Google Workspace (APIs)
 - Sentry (error tracking)

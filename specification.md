@@ -61,7 +61,7 @@ To transform job searching from an exhausting marathon into an effortless backgr
 - Multi-language support
 
 **Technical Requirements:**
-- GPT-4 or Claude API integration
+- Gemini 2.5 Flash API integration (exclusive model for cost optimization)
 - Template management system
 - Version control for generated content
 - A/B testing framework for optimization
@@ -301,10 +301,14 @@ To transform job searching from an exhausting marathon into an effortless backgr
 - Email validation services
 
 ### AI Services
-- OpenAI GPT-4 API or Anthropic Claude API
+- Gemini 2.5 Flash API (EXCLUSIVE - no other models permitted for cost optimization)
+- Cost-optimized model selection rationale:
+  - Gemini 2.5 Flash provides optimal cost-to-performance ratio
+  - Significantly lower operational costs compared to GPT-4 or Claude
+  - Adequate capabilities for all required AI tasks
 - Custom fine-tuning capability
-- Fallback providers
-- Rate limiting and cost management
+- No fallback providers (single model strategy for cost control)
+- Strict rate limiting and cost management
 
 ### Job Boards
 - Indeed API/Scraping

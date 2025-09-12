@@ -188,7 +188,7 @@ workers/
 
 **Components:**
 - **Prompt Manager**: Template and prompt versioning
-- **LLM Gateway**: Multi-provider support (OpenAI, Anthropic)
+- **LLM Gateway**: Single provider - Gemini 2.5 Flash (cost-optimized)
 - **Content Generator**: Cover letters, resumes
 - **Quality Scorer**: Output validation
 - **Cache Layer**: Response caching
@@ -537,7 +537,7 @@ jobhunt-ai/
 - **Monitoring**: Application Insights
 
 ### External Services
-- **AI**: OpenAI GPT-4 / Anthropic Claude
+- **AI**: Gemini 2.5 Flash (exclusive model for cost optimization)
 - **Email**: SendGrid
 - **Auth**: Google OAuth
 - **Calendar**: Google Calendar API
