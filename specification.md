@@ -47,8 +47,9 @@ To transform job searching from an exhausting marathon into an effortless backgr
 - Real-time job alert system
 
 **Technical Requirements:**
-- Stagehand for browser automation
-- Custom crawling schedules per source
+- Playwright.NET for browser automation
+- Semantic Kernel integration for AI-powered resilience (self-healing selectors)
+- Custom crawling schedules per source via Hangfire
 - ML-based relevance scoring (0-100)
 - Rate limiting and anti-detection measures
 
@@ -139,7 +140,8 @@ To transform job searching from an exhausting marathon into an effortless backgr
 - User-defined operation windows
 
 **Technical Requirements:**
-- Mastra workflow orchestration
+- Semantic Kernel for AI agent orchestration
+- Hangfire for background job scheduling
 - Distributed task queue
 - Health check system
 - Auto-scaling based on workload

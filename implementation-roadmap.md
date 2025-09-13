@@ -170,9 +170,10 @@ Build the automated job discovery and matching system with web crawling capabili
 
 #### Tasks
 
-1. **Stagehand Integration**
-   - Stagehand setup and configuration
-   - Browser automation framework
+1. **Playwright.NET Integration**
+   - Playwright.NET setup and configuration
+   - Browser automation framework implementation
+   - Semantic Kernel integration for AI resilience
    - Anti-detection measures
    - Proxy rotation setup
    - Rate limiting implementation
@@ -392,25 +393,25 @@ Implement email automation, application tracking, and Google integrations.
 ## Phase 6: Workflow Orchestration (Weeks 21-22)
 
 ### Goals
-Implement Mastra workflows for autonomous operation and system optimization.
+Implement Semantic Kernel AI agents and Hangfire job scheduling for autonomous operation and system optimization.
 
 ### Sprint 11 (Weeks 21-22)
 
 #### Tasks
 
-1. **Mastra Integration**
-   - Mastra setup and configuration
-   - Workflow definition framework
-   - Event trigger system
-   - State management
-   - Error handling
+1. **Hangfire & Semantic Kernel Integration**
+   - Hangfire setup and configuration
+   - Semantic Kernel initialization
+   - AI agent definition framework
+   - Job scheduling configuration
+   - Tool/plugin registration
 
-2. **Core Workflows**
-   - Job discovery workflow
-   - Application workflow
-   - Follow-up workflow
-   - Interview workflow
-   - Rejection workflow
+2. **Core AI Agents & Jobs**
+   - Job discovery agent (Semantic Kernel)
+   - Application generation agent
+   - Follow-up agent
+   - Interview coordination agent
+   - Scheduled job definitions (Hangfire)
 
 3. **Workflow Monitoring**
    - Execution tracking
@@ -427,9 +428,10 @@ Implement Mastra workflows for autonomous operation and system optimization.
    - Alerting system
 
 ### Deliverables
-- Mastra workflows operational
+- Semantic Kernel agents operational
+- Hangfire job scheduling active
 - Autonomous job application system
-- Workflow monitoring dashboard
+- Job monitoring dashboard (Hangfire)
 - System health monitoring
 - Performance optimization complete
 

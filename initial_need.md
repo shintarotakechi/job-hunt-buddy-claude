@@ -16,7 +16,7 @@ Google Sheets integration to track job status automatically: applied, awaiting r
 
 Google Calendar integration for interview scheduling and reminders.
 
-Fully autonomous workflow using Stagehand and Mastra, running continuously in the background.
+Fully autonomous workflow using Playwright.NET, Semantic Kernel, and Hangfire, running continuously in the background.
 
 User flow:
 

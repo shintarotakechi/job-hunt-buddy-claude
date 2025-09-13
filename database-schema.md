@@ -37,6 +37,7 @@ CREATE SCHEMA IF NOT EXISTS ai;
 CREATE SCHEMA IF NOT EXISTS integrations;
 CREATE SCHEMA IF NOT EXISTS analytics;
 CREATE SCHEMA IF NOT EXISTS audit;
+CREATE SCHEMA IF NOT EXISTS hangfire;
 ```
 
 ## Users Schema
@@ -634,6 +635,26 @@ CREATE INDEX idx_generations_user ON ai.generations(user_id, created_at DESC);
 CREATE INDEX idx_generations_type ON ai.generations(type);
 ```
 
+### ai.agent_states
+
+```sql
+CREATE TABLE ai.agent_states (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users.users(id) ON DELETE CASCADE,
+    agent_type VARCHAR(50) NOT NULL, -- job_discovery, application_generation, email_coordination, interview_scheduling
+    state_data JSONB NOT NULL, -- Semantic Kernel agent state/memory
+    conversation_history TEXT[],
+    last_execution TIMESTAMP WITH TIME ZONE,
+    execution_count INTEGER DEFAULT 0,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_agent_states_user ON ai.agent_states(user_id, agent_type);
+CREATE INDEX idx_agent_states_active ON ai.agent_states(is_active, last_execution);
+```
+
 ## Integrations Schema
 
 ### integrations.google_sheets
@@ -773,6 +794,97 @@ CREATE TABLE audit.audit_logs (
 CREATE INDEX idx_audit_logs_user ON audit.audit_logs(user_id, created_at DESC);
 CREATE INDEX idx_audit_logs_entity ON audit.audit_logs(entity_type, entity_id);
 CREATE INDEX idx_audit_logs_created ON audit.audit_logs(created_at DESC);
+```
+
+## Hangfire Schema
+
+### Background Job Tables
+
+```sql
+-- Hangfire requires its own schema tables for job scheduling
+-- These tables are automatically created by Hangfire on first run
+-- but are documented here for completeness
+
+CREATE TABLE hangfire.schema (
+    version INT NOT NULL PRIMARY KEY
+);
+
+CREATE TABLE hangfire.job (
+    id BIGSERIAL PRIMARY KEY,
+    state_id BIGINT,
+    state_name VARCHAR(20),
+    invocation_data TEXT NOT NULL,
+    arguments TEXT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    expire_at TIMESTAMP WITH TIME ZONE
+);
+
+CREATE TABLE hangfire.state (
+    id BIGSERIAL PRIMARY KEY,
+    job_id BIGINT NOT NULL REFERENCES hangfire.job(id) ON DELETE CASCADE,
+    name VARCHAR(20) NOT NULL,
+    reason VARCHAR(100),
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    data TEXT
+);
+
+CREATE TABLE hangfire.jobparameter (
+    id BIGSERIAL PRIMARY KEY,
+    job_id BIGINT NOT NULL REFERENCES hangfire.job(id) ON DELETE CASCADE,
+    name VARCHAR(40) NOT NULL,
+    value TEXT
+);
+
+CREATE TABLE hangfire.jobqueue (
+    id BIGSERIAL PRIMARY KEY,
+    job_id BIGINT NOT NULL,
+    queue VARCHAR(50) NOT NULL,
+    fetched_at TIMESTAMP WITH TIME ZONE
+);
+
+CREATE TABLE hangfire.server (
+    id VARCHAR(200) NOT NULL PRIMARY KEY,
+    data TEXT,
+    last_heartbeat TIMESTAMP WITH TIME ZONE NOT NULL
+);
+
+CREATE TABLE hangfire.set (
+    id BIGSERIAL PRIMARY KEY,
+    key VARCHAR(200) NOT NULL,
+    score DOUBLE PRECISION NOT NULL,
+    value TEXT NOT NULL,
+    expire_at TIMESTAMP WITH TIME ZONE
+);
+
+CREATE TABLE hangfire.counter (
+    id BIGSERIAL PRIMARY KEY,
+    key VARCHAR(200) NOT NULL,
+    value INT NOT NULL,
+    expire_at TIMESTAMP WITH TIME ZONE
+);
+
+CREATE TABLE hangfire.hash (
+    id BIGSERIAL PRIMARY KEY,
+    key VARCHAR(200) NOT NULL,
+    field VARCHAR(100) NOT NULL,
+    value TEXT,
+    expire_at TIMESTAMP WITH TIME ZONE
+);
+
+CREATE TABLE hangfire.list (
+    id BIGSERIAL PRIMARY KEY,
+    key VARCHAR(200) NOT NULL,
+    value TEXT,
+    expire_at TIMESTAMP WITH TIME ZONE
+);
+
+-- Indexes for Hangfire tables
+CREATE INDEX idx_hangfire_job_state ON hangfire.job(state_name);
+CREATE INDEX idx_hangfire_job_expire ON hangfire.job(expire_at);
+CREATE INDEX idx_hangfire_state_job ON hangfire.state(job_id);
+CREATE INDEX idx_hangfire_jobqueue_queue ON hangfire.jobqueue(queue, fetched_at);
+CREATE INDEX idx_hangfire_set_key ON hangfire.set(key);
+CREATE INDEX idx_hangfire_set_expire ON hangfire.set(expire_at);
 ```
 
 ## Functions and Triggers

@@ -48,8 +48,8 @@ JobHunt AI employs a microservices architecture deployed as a monorepo, with cle
 │  │ Crawler  │  │ Service  │  │ Service  │  │   APIs   │  │
 │  └──────────┘  └──────────┘  └──────────┘  └──────────┘  │
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐  │
-│  │Stagehand │  │  Mastra  │  │Analytics │  │  Auth    │  │
-│  │          │  │Workflows │  │          │  │ Service  │  │
+│  │Playwright│  │ Semantic │  │Analytics │  │  Auth    │  │
+│  │   .NET   │  │  Kernel  │  │          │  │ Service  │  │
 │  └──────────┘  └──────────┘  └──────────┘  └──────────┘  │
 └─────────────────────────────────────────────────────────────┘
                               │
@@ -170,26 +170,31 @@ workers/
 ### Job Crawler Service
 
 **Components:**
-- **Scheduler**: Cron-based job scheduling
-- **Crawler Engine**: Stagehand-powered browser automation
+- **Scheduler**: Hangfire-based job scheduling
+- **Crawler Engine**: Playwright.NET browser automation
+- **AI Resilience Layer**: Semantic Kernel for self-healing selectors
 - **Parser**: Job data extraction and normalization
 - **Deduplicator**: Duplicate detection using MinHash
 - **Scorer**: ML-based relevance scoring
 
 **Flow:**
-1. Scheduler triggers crawl jobs
-2. Crawler fetches job listings
-3. Parser extracts structured data
-4. Deduplicator filters duplicates
-5. Scorer ranks job relevance
-6. Results saved to database
+1. Hangfire triggers scheduled crawl jobs
+2. Playwright.NET launches browser instances
+3. AI adapts selectors if DOM changes detected
+4. Parser extracts structured data
+5. Deduplicator filters duplicates
+6. Scorer ranks job relevance
+7. Results saved to database
 
 ### AI Service
 
 **Components:**
+- **Semantic Kernel**: Microsoft's AI orchestration framework
+- **Agent Manager**: Coordinates multiple AI agents
 - **Prompt Manager**: Template and prompt versioning
 - **LLM Gateway**: Single provider - Gemini 2.5 Flash (cost-optimized)
-- **Content Generator**: Cover letters, resumes
+- **Content Generator**: Cover letters, resumes via agents
+- **Tool Registry**: Playwright.NET, Google APIs, email tools
 - **Quality Scorer**: Output validation
 - **Cache Layer**: Response caching
 
@@ -218,25 +223,36 @@ workers/
 5. Track delivery and engagement
 6. Parse and classify responses
 
-### Workflow Orchestration (Mastra)
+### Workflow Orchestration (Semantic Kernel + Hangfire)
 
-**Workflows:**
+**Background Job Scheduling (Hangfire):**
+- Recurring job discovery tasks
+- Application processing queues
+- Follow-up scheduling
+- Retry management and failure handling
+- Dashboard for monitoring job execution
 
-1. **Job Discovery Workflow**
-   - Trigger: Schedule or manual
-   - Steps: Crawl → Parse → Score → Store → Notify
+**AI Agent Orchestration (Semantic Kernel):**
 
-2. **Application Workflow**
-   - Trigger: New matched job
-   - Steps: Generate Cover Letter → Customize Resume → Find Contacts → Send Application → Update Tracker
+1. **Job Discovery Agent**
+   - Triggered by Hangfire schedule
+   - Uses tools: Web crawler, parser, scorer
+   - Autonomously decides which jobs to process
 
-3. **Follow-up Workflow**
-   - Trigger: Time-based after application
-   - Steps: Check Status → Generate Follow-up → Send → Update Tracker
+2. **Application Agent**
+   - Processes jobs from Hangfire queue
+   - Coordinates sub-agents for cover letter and resume
+   - Makes decisions on application strategy
 
-4. **Interview Workflow**
-   - Trigger: Interview invitation detected
-   - Steps: Parse Details → Create Calendar Event → Send Confirmation → Prepare Materials
+3. **Follow-up Agent**
+   - Scheduled by Hangfire based on application date
+   - Analyzes response patterns
+   - Generates contextual follow-ups
+
+4. **Interview Coordination Agent**
+   - Monitors email for interview invitations
+   - Extracts details and schedules calendar events
+   - Prepares interview materials
 
 ## Data Architecture
 
@@ -525,6 +541,7 @@ jobhunt-ai/
 - **API**: REST + GraphQL
 - **Real-time**: SignalR
 - **Background Jobs**: Hangfire
+- **AI Orchestration**: Semantic Kernel
 - **Caching**: Redis
 
 ### Infrastructure
